@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { RouterModule } from '@nestjs/core';
+import { ClientsModule } from './modules';
+import { PrismaService } from './common/prisma.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    RouterModule.register([
+      {
+        path: 'clients',
+        module: ClientsModule,
+      },
+    ]),
+    ClientsModule,
+  ],
+  controllers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}
