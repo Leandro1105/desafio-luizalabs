@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreateClientDto, UpdateClientDto } from './dto/Client.dto';
 import { Client } from '@prisma/client';
-import { PaginationDto } from './dto/Pagination.dto';
+import { PaginationDto } from '../../common/dto/Pagination.dto';
 import { DEFAULT_LIMIT } from 'src/utils/constants';
 
 @Injectable()
