@@ -21,7 +21,13 @@ export class ClientsService {
       skip,
       take: DEFAULT_LIMIT,
       include: {
-        wishlist: true,
+        wishlist: {
+          select: {
+            id: true,
+            productId: true,
+            createdAt: true,
+          },
+        },
       },
     });
   }
