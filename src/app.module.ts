@@ -3,7 +3,8 @@ import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ClientsModule, ProductsModule, WishlistModule } from './modules';
 import { PrismaService } from './common/prisma.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { AuthGuard } from './modules/auth/auth.guard';
+import { RolesGuard } from './modules/auth/roles/roles.guard';
+import { JwtAuthGuard } from './modules/auth/guards/jwt.guard';
 
 @Module({
   imports: [
@@ -34,7 +35,11 @@ import { AuthGuard } from './modules/auth/auth.guard';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     PrismaService,
   ],

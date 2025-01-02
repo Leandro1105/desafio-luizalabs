@@ -1,30 +1,21 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
+import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { LocalAuthGuard } from './guards/local.guard';
 import { Public } from './decorators/is-public.decorator';
-import { AuthDto } from './dto/Auth.dto';
 
-@Controller('')
+@Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @UseGuards(LocalAuthGuard)
   @Public()
-  @HttpCode(HttpStatus.OK)
   @Post('')
-  signIn(@Body() signInDto: AuthDto) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('')
   getProfile(@Request() req) {
     return req.user;

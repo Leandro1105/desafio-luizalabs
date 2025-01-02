@@ -20,11 +20,15 @@ export class ProductsService {
     return this.prisma.product.findMany({
       skip,
       take: DEFAULT_LIMIT,
+      include: { reviews: true },
     });
   }
 
   async findOne(id: string): Promise<Product | null> {
-    return this.prisma.product.findUnique({ where: { id } });
+    return this.prisma.product.findUnique({
+      where: { id },
+      include: { reviews: true },
+    });
   }
 
   async update(id: string, data: UpdateProductDto): Promise<Product> {
