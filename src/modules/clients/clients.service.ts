@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreateClientDto, UpdateClientDto } from './dto/Client.dto';
 import { Client } from '@prisma/client';
@@ -10,6 +10,11 @@ export class ClientsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateClientDto): Promise<Client> {
+    const { email } = data;
+    const client = await this.prisma.client.findUnique({ where: { email } });
+
+    if (client) throw new ConflictException('Email already in use');
+
     return this.prisma.client.create({ data });
   }
 
