@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -26,11 +25,7 @@ export class ClientsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const client = await this.clientsService.findOne(id);
-
-    if (!client) throw new NotFoundException('Client not found');
-
-    return client;
+    return this.clientsService.findOne(id);
   }
 
   @Roles(Role.Admin)
@@ -51,5 +46,10 @@ export class ClientsController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.clientsService.delete(id);
+  }
+
+  @Get(':id/wishlist')
+  async getWishlist(@Param('id') id: string) {
+    return this.clientsService.getWishlist(id);
   }
 }

@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma.service';
 import { CreateClientDto, UpdateClientDto } from './dto/Client.dto';
 import { Client } from '@prisma/client';
@@ -25,20 +29,20 @@ export class ClientsService {
     return this.prisma.client.findMany({
       skip,
       take: DEFAULT_LIMIT,
-      include: {
-        wishlist: {
-          select: {
-            id: true,
-            productId: true,
-            createdAt: true,
-          },
-        },
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
     });
   }
 
   async findOne(id: string): Promise<Client | null> {
-    return this.prisma.client.findUnique({ where: { id } });
+    const client = await this.prisma.client.findUnique({ where: { id } });
+
+    if (!client) throw new NotFoundException('Client not found');
+
+    return client;
   }
 
   async update(id: string, data: UpdateClientDto): Promise<Client> {
@@ -47,5 +51,33 @@ export class ClientsService {
 
   async delete(id: string): Promise<Client> {
     return this.prisma.client.delete({ where: { id } });
+  }
+
+  async getWishlist(id: string) {
+    const client = await this.prisma.client.findUnique({
+      where: { id },
+    });
+
+    if (!client) throw new NotFoundException('Client not found');
+
+    const wishlist = await this.prisma.wishlist.findMany({
+      where: { clientId: id },
+      include: {
+        product: {
+          select: {
+            id: true,
+            title: true,
+            image: true,
+            price: true,
+            reviewScore: true,
+          },
+        },
+      },
+    });
+
+    return wishlist.map(({ product }) => ({
+      ...product,
+      link: `http://localhost:3000/products/${product.id}`,
+    }));
   }
 }

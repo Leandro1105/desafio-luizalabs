@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -26,11 +25,7 @@ export class ProductsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const product = await this.productsService.findOne(id);
-
-    if (!product) throw new NotFoundException('Product not found');
-
-    return product;
+    return this.productsService.findOne(id);
   }
 
   @Roles(Role.Admin)

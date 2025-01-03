@@ -27,7 +27,7 @@ model Product {
   brand     String 
   image     String
   price     Float
-  reviewScore Float
+  reviewScore Float?
 
   reviews   Reviews[]
   wishlist Wishlist[]
