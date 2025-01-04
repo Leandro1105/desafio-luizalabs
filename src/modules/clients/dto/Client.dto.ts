@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateClientDto implements Prisma.ClientCreateInput {
   @IsNotEmpty()
@@ -14,9 +14,11 @@ export class CreateClientDto implements Prisma.ClientCreateInput {
 
 export class UpdateClientDto implements Prisma.ClientUpdateInput {
   @IsString()
+  @IsOptional()
   name?: string;
 
   @IsString()
+  @IsOptional()
   @IsEmail()
   email?: string;
 }

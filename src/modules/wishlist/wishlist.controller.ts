@@ -15,8 +15,11 @@ export class WishlistController {
   }
 
   @Roles(Role.Admin)
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.wishlistService.delete(id);
+  @Delete(':clientId/:productId')
+  async delete(
+    @Param('clientId') clientId: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.wishlistService.delete(clientId, productId);
   }
 }

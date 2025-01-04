@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import {
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   Min,
@@ -34,17 +35,22 @@ export class CreateProductDto implements Prisma.ProductCreateInput {
 
 export class UpdateProductDto implements Prisma.ProductUpdateInput {
   @IsString()
+  @IsOptional()
   title?: string;
 
+  @IsOptional()
   @IsString()
   brand?: string;
 
+  @IsOptional()
   @IsString()
   image?: string;
 
+  @IsOptional()
   @IsNumber()
   price?: number;
 
+  @IsOptional()
   @IsNumber()
   reviewScore?: number;
 }

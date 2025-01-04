@@ -25,7 +25,14 @@ export class WishlistService {
     return this.prisma.wishlist.create({ data });
   }
 
-  async delete(id: string): Promise<Wishlist> {
-    return this.prisma.wishlist.delete({ where: { id } });
+  async delete(clientId: string, productId: string): Promise<Wishlist> {
+    return this.prisma.wishlist.delete({
+      where: {
+        clientId_productId: {
+          clientId,
+          productId,
+        },
+      },
+    });
   }
 }
