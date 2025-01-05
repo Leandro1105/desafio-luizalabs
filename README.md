@@ -14,8 +14,8 @@ Atenciosamente, Leandro Andrade Vieira
 Link da documentação no postman: [Documentação](https://documenter.getpostman.com/view/35374986/2sAYJ9AJES)
 
 
-## Arquivo src
-Crie um arquivo .src na raiz do seu projeto, e insira as seguintes variáveis:
+## Arquivo env
+Crie um arquivo .env na raiz do seu projeto, e insira as seguintes variáveis:
 
 DATABASE_URL="postgresql://postgres:123456@localhost:5432/desafio?schema=public"
 
