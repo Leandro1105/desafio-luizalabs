@@ -18,6 +18,7 @@ Link da documentação no postman: [Documentação](https://documenter.getpostma
 Crie um arquivo .src na raiz do seu projeto, e insira as seguintes variáveis:
 
 DATABASE_URL="postgresql://postgres:123456@localhost:5432/desafio?schema=public"
+
 JWT_SECRET: 'changeme'
 
 
