@@ -31,6 +31,8 @@ $ npm install
 ## Migração do banco de dados + seed
 
 ```bash
+$ npx prisma generate
+
 $ npx prisma migrate dev
 
 $ npm run seed
