@@ -5,11 +5,15 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { CreateWishlistDto } from './dto/Wishlist.dto';
 
 const mockPrismaService = {
+  client: {
+    findUnique: jest.fn(),
+  },
   product: {
     findUnique: jest.fn(),
   },
   wishlist: {
     findFirst: jest.fn(),
+    findMany: jest.fn(),
     create: jest.fn(),
     delete: jest.fn(),
   },
@@ -107,6 +111,87 @@ describe('Teste do service', () => {
       expect(prisma.wishlist.delete).toHaveBeenCalledWith({
         where: { clientId_productId: { clientId, productId } },
       });
+    });
+  });
+
+  describe('getWishlist', () => {
+    it('Deve retornar a wishlist do cliente', async () => {
+      const clientId = '1';
+      const client = { id: '1', name: 'Teste', email: 'Cliente Teste' };
+      const wishlistItems = [
+        {
+          product: {
+            id: '101',
+            title: 'Produto 1',
+            image: 'image1.jpg',
+            price: 100.0,
+            reviewScore: 4.5,
+          },
+        },
+        {
+          product: {
+            id: '102',
+            title: 'Produto 2',
+            image: 'image2.jpg',
+            price: 200.0,
+            reviewScore: 4.8,
+          },
+        },
+      ];
+
+      prisma.client.findUnique.mockResolvedValue(client);
+      prisma.wishlist.findMany.mockResolvedValue(wishlistItems);
+
+      const result = await service.getWishlist(clientId);
+
+      expect(result).toEqual([
+        {
+          id: '101',
+          title: 'Produto 1',
+          image: 'image1.jpg',
+          price: 100.0,
+          reviewScore: 4.5,
+          link: 'https://desafio-luizalabs-production.up.railway.app/products/101',
+        },
+        {
+          id: '102',
+          title: 'Produto 2',
+          image: 'image2.jpg',
+          price: 200.0,
+          reviewScore: 4.8,
+          link: 'https://desafio-luizalabs-production.up.railway.app/products/102',
+        },
+      ]);
+      expect(prisma.client.findUnique).toHaveBeenCalledWith({
+        where: { id: clientId },
+      });
+      expect(prisma.wishlist.findMany).toHaveBeenCalledWith({
+        where: { clientId },
+        include: {
+          product: {
+            select: {
+              id: true,
+              title: true,
+              image: true,
+              price: true,
+              reviewScore: true,
+            },
+          },
+        },
+      });
+    });
+
+    it('Deve retornar NotFoundException se o cliente não existir', async () => {
+      const clientId = '1';
+      prisma.client.findUnique.mockResolvedValue(null);
+
+      await expect(service.getWishlist(clientId)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(prisma.client.findUnique).toHaveBeenCalledWith({
+        where: { id: clientId },
+      });
+      expect(prisma.wishlist.findMany).not.toHaveBeenCalled();
     });
   });
 });

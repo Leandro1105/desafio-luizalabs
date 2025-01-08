@@ -52,32 +52,4 @@ export class ClientsService {
   async delete(id: string): Promise<Client> {
     return this.prisma.client.delete({ where: { id } });
   }
-
-  async getWishlist(id: string) {
-    const client = await this.prisma.client.findUnique({
-      where: { id },
-    });
-
-    if (!client) throw new NotFoundException('Client not found');
-
-    const wishlist = await this.prisma.wishlist.findMany({
-      where: { clientId: id },
-      include: {
-        product: {
-          select: {
-            id: true,
-            title: true,
-            image: true,
-            price: true,
-            reviewScore: true,
-          },
-        },
-      },
-    });
-
-    return wishlist.map(({ product }) => ({
-      ...product,
-      link: `http://localhost:3000/products/${product.id}`,
-    }));
-  }
 }

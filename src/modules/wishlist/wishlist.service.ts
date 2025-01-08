@@ -35,4 +35,32 @@ export class WishlistService {
       },
     });
   }
+
+  async getWishlist(clientId: string) {
+    const client = await this.prisma.client.findUnique({
+      where: { id: clientId },
+    });
+
+    if (!client) throw new NotFoundException('Client not found');
+
+    const wishlist = await this.prisma.wishlist.findMany({
+      where: { clientId },
+      include: {
+        product: {
+          select: {
+            id: true,
+            title: true,
+            image: true,
+            price: true,
+            reviewScore: true,
+          },
+        },
+      },
+    });
+
+    return wishlist.map(({ product }) => ({
+      ...product,
+      link: `https://desafio-luizalabs-production.up.railway.app/products/${product.id}`,
+    }));
+  }
 }

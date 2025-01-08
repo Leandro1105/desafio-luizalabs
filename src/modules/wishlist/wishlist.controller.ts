@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/Wishlist.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -21,5 +21,11 @@ export class WishlistController {
     @Param('productId') productId: string,
   ) {
     return this.wishlistService.delete(clientId, productId);
+  }
+
+  @Roles(Role.Admin)
+  @Get(':clientId')
+  async getWishlist(@Param('clientId') clientId: string) {
+    return this.wishlistService.getWishlist(clientId);
   }
 }

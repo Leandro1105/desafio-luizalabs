@@ -6,6 +6,7 @@ import { CreateWishlistDto } from './dto/Wishlist.dto';
 const mockWishlistService = {
   create: jest.fn(),
   delete: jest.fn(),
+  getWishlist: jest.fn(),
 };
 
 describe('Teste da controller', () => {
@@ -51,6 +52,26 @@ describe('Teste da controller', () => {
       const result = await controller.delete(clientId, productId);
       expect(result).toEqual({ id: '1', clientId, productId });
       expect(service.delete).toHaveBeenCalledWith(clientId, productId);
+    });
+  });
+
+  describe('getWishlist', () => {
+    it('Deve retornar os favoritos de um cliente', async () => {
+      const id = '1';
+      const result = [
+        {
+          id: '101',
+          title: 'Produto 1',
+          price: 100,
+          image: 'imagem1.jpg',
+          reviewScore: 4.5,
+          link: 'https://desafio-luizalabs-production.up.railway.app/products/101',
+        },
+      ];
+      mockWishlistService.getWishlist.mockResolvedValue(result);
+
+      expect(await controller.getWishlist(id)).toBe(result);
+      expect(mockWishlistService.getWishlist).toHaveBeenCalledWith(id);
     });
   });
 });

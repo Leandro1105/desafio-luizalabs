@@ -18,11 +18,13 @@ import { Role } from '../auth/enums/role.enum';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Roles(Role.Admin)
   @Get('')
   async findAll(@Query() paginationDto: PaginationDto) {
     return this.productsService.findAll(paginationDto);
   }
 
+  @Roles(Role.Admin)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);

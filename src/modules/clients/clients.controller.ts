@@ -18,11 +18,13 @@ import { Role } from '../auth/enums/role.enum';
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
+  @Roles(Role.Admin)
   @Get('')
   async findAll(@Query() paginationDto: PaginationDto) {
     return this.clientsService.findAll(paginationDto);
   }
 
+  @Roles(Role.Admin)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.clientsService.findOne(id);
@@ -46,10 +48,5 @@ export class ClientsController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.clientsService.delete(id);
-  }
-
-  @Get(':id/wishlist')
-  async getWishlist(@Param('id') id: string) {
-    return this.clientsService.getWishlist(id);
   }
 }

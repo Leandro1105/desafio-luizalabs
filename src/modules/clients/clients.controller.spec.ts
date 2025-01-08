@@ -89,24 +89,4 @@ describe('Teste do controller', () => {
       expect(await controller.delete(id)).toBe(result);
     });
   });
-
-  describe('getWishlist', () => {
-    it('Deve retornar os favoritos de um cliente', async () => {
-      const id = '1';
-      const result = [
-        {
-          id: '101',
-          title: 'Produto 1',
-          price: 100,
-          image: 'imagem1.jpg',
-          reviewScore: 4.5,
-          link: 'http://localhost:3000/products/101',
-        },
-      ];
-      mockClientService.getWishlist.mockResolvedValue(result);
-
-      expect(await controller.getWishlist(id)).toBe(result);
-      expect(mockClientService.getWishlist).toHaveBeenCalledWith(id);
-    });
-  });
 });
